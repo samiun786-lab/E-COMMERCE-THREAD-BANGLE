@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Manya Bangles</title>
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+<!-- ═══ TOPBAR ═══ -->
+<header class="admin-topbar">
+  <div class="admin-topbar-brand">
+    <img src="assets/logo.jpg" alt="Logo" class="admin-topbar-logo">
+    <div>
+      <div class="admin-topbar-title" id="admin-brand-name">Manya Bangles</div>
+      <div class="admin-topbar-sub">Admin Dashboard</div>
+    </div>
+  </div>
+  <div class="admin-topbar-right">
+    <div class="admin-user-badge">
+      👤 <span id="admin-email-display">admin</span>
+    </div>
+    <a href="index.html" target="_blank" style="
+      padding:7px 14px;background:rgba(26,107,110,0.15);border:1px solid rgba(26,107,110,0.3);
+      border-radius:999px;font-size:13px;color:var(--teal-light);cursor:pointer;display:flex;align-items:center;gap:6px;
+    " title="Open storefront in new tab">
+      🛍 Storefront
+    </a>
+    <button class="admin-logout-btn" id="logout-btn" onclick="handleLogout()">
+      🚪 Logout
+    </button>
+  </div>
+</header>
+<div class="admin-body">
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="admin-sidebar">
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Overview</div>
+      <div class="sidebar-nav-item active" data-panel="inventory" onclick="switchPanel('inventory')">
+        <span class="nav-icon">📦</span> Inventory
+      </div>
+      <div class="sidebar-nav-item" data-panel="pricing" onclick="switchPanel('pricing')">
+        <span class="nav-icon">💰</span> Pricing
+      </div>
+    </div>
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Orders</div>
+      <div class="sidebar-nav-item" data-panel="orders" onclick="switchPanel('orders')">
+        <span class="nav-icon">📋</span> Orders
+        <span class="sidebar-badge" id="orders-badge" style="display:none">0</span>
+      </div>
+    </div>
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Settings</div>
+      <div class="sidebar-nav-item" data-panel="settings" onclick="switchPanel('settings')">
+        <span class="nav-icon">⚙️</span> Settings
+      </div>
+    </div>
+  </nav>
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main class="admin-main">
+    <!-- ───── INVENTORY PANEL ───── -->
+    <div class="admin-panel active" id="panel-inventory">
+      <div class="panel-header">
+        <div>
+          <h1 class="panel-title">Inventory Manager</h1>
+          <p class="panel-subtitle">Manage all sizes, designs, and bead types. Toggle availability or update prices instantly.</p>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="seedDemoData()" id="seed-btn" title="Populate with demo data">
+          🌱 Seed Demo Data
+        </button>
+      </div>
+      <!-- Quick stats -->
+      <div class="stat-cards" id="inventory-stats">
+        <div class="stat-card">
+          <div class="stat-card-icon">📏</div>
+          <div class="stat-card-value" id="stat-sizes">—</div>
+          <div class="stat-card-label">Sizes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🎨</div>
+          <div class="stat-card-value" id="stat-designs">—</div>
+          <div class="stat-card-label">Designs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">💎</div>
+          <div class="stat-card-value" id="stat-beads">—</div>
+          <div class="stat-card-label">Bead Types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">📋</div>
+          <div class="stat-card-value" id="stat-orders">—</div>
+          <div class="stat-card-label">Total Orders</div>
+        </div>
+      </div>
+      <!-- ── Sizes Section ── -->
+      <div class="inventory-section">
+        <div class="inventory-section-header">
+          <div class="inventory-section-title">
+            <div class="inventory-section-icon icon-rose">📏</div>
+            Bangle Sizes
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openAddModal('sizes')">+ Add Size</button>
+        </div>
+        <div class="admin-item-grid" id="admin-sizes-grid">
+          <div class="empty-state"><span class="empty-state-icon">⏳</span><div class="empty-state-text">Loading...</div></div>
+        </div>
+      </div>
+      <!-- ── Designs Section ── -->
+      <div class="inventory-section">
+        <div class="inventory-section-header">
+          <div class="inventory-section-title">
+            <div class="inventory-section-icon icon-gold">🎨</div>
+            Design Patterns
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="openAddModal('designs')">+ Add Design</button>
+        </div>
+        <div class="admin-item-grid" id="admin-designs-grid">
+          <div class="empty-state"><span class="empty-state-icon">⏳</span><div class="empty-state-text">Loading...</div></div>
+        </div>
+      </div>
+      <!-- ── Beads Section ── -->
+      <div class="inventory-section">
+        <div class="inventory-section-header">
+          <div class="inventory-section-title">
+            <div class="inventory-section-icon icon-teal">💎</div>
+            Beads & Embellishments
+          </div>
+          <button class="btn btn-sm" style="background:var(--teal);color:#fff" onclick="openAddModal('beads')">+ Add Bead</button>
+        </div>
+        <div class="admin-item-grid" id="admin-beads-grid">
+          <div class="empty-state"><span class="empty-state-icon">⏳</span><div class="empty-state-text">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- ───── PRICING PANEL ───── -->
+    <div class="admin-panel" id="panel-pricing">
+      <div class="panel-header">
+        <div>
+          <h1 class="panel-title">Pricing Engine 💰</h1>
+          <p class="panel-subtitle">Set base prices for designs and addon costs for beads. Changes reflect live on the storefront.</p>
+        </div>
+        <button class="btn btn-gold" onclick="savePricingSnapshot()">💾 Save All Prices</button>
+      </div>
+      <div class="pricing-grid">
+        <!-- Base Price Card -->
+        <div class="pricing-card">
+          <div class="pricing-card-title">⚙️ Global Base Price</div>
+          <div class="form-group">
+            <label class="form-label">Base Price (₹) — applied to all orders</label>
+            <input type="number" class="form-input" id="pricing-base" placeholder="e.g., 149" min="0" step="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Currency Symbol</label>
+            <input type="text" class="form-input" id="pricing-currency" placeholder="₹" maxlength="3" style="width:80px">
+          </div>
+        </div>
+        <!-- Design prices -->
+        <div class="pricing-card">
+          <div class="pricing-card-title">🎨 Design Pattern Prices</div>
+          <div class="pricing-list" id="pricing-designs-list">
+            <div style="font-size:12px;color:rgba(255,255,255,0.35)">Loading designs...</div>
+          </div>
+        </div>
+        <!-- Bead add-on prices -->
+        <div class="pricing-card">
+          <div class="pricing-card-title">💎 Bead Add-on Prices</div>
+          <div class="pricing-list" id="pricing-beads-list">
+            <div style="font-size:12px;color:rgba(255,255,255,0.35)">Loading beads...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ───── ORDERS PANEL ───── -->
+    <div class="admin-panel" id="panel-orders">
+      <div class="panel-header">
+        <div>
+          <h1 class="panel-title">Order Tracker 📋</h1>
+          <p class="panel-subtitle">All submitted customer orders, newest first. Click reference image to view full size.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadOrders()">🔄 Refresh</button>
+      </div>
+      <div class="orders-table-wrap">
+        <table class="orders-table" id="orders-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date & Time</th>
+              <th>Customer</th>
+              <th>Size</th>
+              <th>Design</th>
+              <th>Beads</th>
+              <th>Notes</th>
+              <th>Ref. Image</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr>
+              <td colspan="10">
+                <div class="empty-state">
+                  <span class="empty-state-icon">📭</span>
+                  <div class="empty-state-text">No orders yet. Orders placed via WhatsApp checkout will appear here.</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ───── SETTINGS PANEL ───── -->
+    <div class="admin-panel" id="panel-settings">
+      <div class="panel-header">
+        <div>
+          <h1 class="panel-title">Settings ⚙️</h1>
+          <p class="panel-subtitle">Update your business information and platform settings.</p>
+        </div>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-card-title">🏪 Business Info</div>
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input type="text" class="form-input" id="setting-biz-name" placeholder="Manya Bangles">
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp Number (with country code, no + or spaces)</label>
+            <input type="text" class="form-input" id="setting-whatsapp" placeholder="919876543210">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tagline</label>
+            <input type="text" class="form-input" id="setting-tagline" placeholder="Handcrafted with love 🌸">
+          </div>
+          <button class="btn btn-gold" onclick="saveSettings()">💾 Save Settings</button>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-card-title">🔐 Security</div>
+          <div class="form-group">
+            <label class="form-label">Logged in as</label>
+            <input type="email" class="form-input" id="setting-email-display" readonly style="opacity:0.5">
+          </div>
+          <button class="btn btn-sm" style="background:rgba(239,68,68,0.15);color:#FCA5A5;border:1px solid rgba(239,68,68,0.25);border-radius:999px;padding:8px 18px;font-size:13px;font-weight:600" onclick="handleLogout()">
+            🚪 Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </main><!-- /admin-main -->
+</div><!-- /admin-body -->
+<!-- ═══ ADD / EDIT ITEM MODAL ═══ -->
+<div class="modal-overlay" id="item-modal-overlay" onclick="closeItemModal(event)">
+  <div class="modal admin-modal" id="item-modal">
+    <div class="modal-header">
+      <div class="modal-title" id="item-modal-title">Add New Item</div>
+      <button class="modal-close" onclick="closeItemModal(null)">✕</button>
+    </div>
+    <form id="item-modal-form" onsubmit="saveItem(event)">
+      <input type="hidden" id="item-modal-type">
+      <input type="hidden" id="item-modal-id">
+      <div class="form-group">
+        <label class="form-label">Title *</label>
+        <input type="text" class="form-input" id="item-modal-name" placeholder="e.g., Kundan Stones" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Subtitle / Description</label>
+        <input type="text" class="form-input" id="item-modal-subtitle" placeholder="e.g., Traditional Indian gems">
+      </div>
+      <div class="form-group" id="price-group">
+        <label class="form-label" id="price-label">Price (₹)</label>
+        <input type="number" class="form-input" id="item-modal-price" placeholder="e.g., 199" min="0" step="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="item-modal-image-url">Image URL</label>
+        <input
+          type="url"
+          class="form-input"
+          id="item-modal-image-url"
+          placeholder="https://i.imgur.com/example.jpg"
+          autocomplete="off"
+          oninput="onImageUrlInput(this.value)"
+        >
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px">
+          Paste any public image URL (Imgur, Google Drive public link, etc.)
+        </div>
+        <!-- Loading indicator -->
+        <div id="modal-img-loading" style="display:none;margin-top:10px;text-align:center;font-size:12px;color:rgba(255,255,255,0.4)">
+          <div class="spinner" style="width:20px;height:20px;border-width:2px;display:inline-block;margin-right:6px;vertical-align:middle"></div>
+          Checking image…
+        </div>
+        <!-- Preview (shown when URL loads successfully) -->
+        <div id="modal-img-preview" style="margin-top:10px;display:none">
+          <img
+            id="modal-img-preview-img"
+            style="max-height:140px;border-radius:12px;margin:0 auto;display:block;border:2px solid rgba(16,185,129,0.4)"
+            src=""
+            alt="Image preview"
+          >
+          <div style="text-align:center;font-size:11px;color:#6EE7B7;margin-top:6px">✅ Image loaded successfully</div>
+        </div>
+        <!-- Error state (shown when URL fails) -->
+        <div id="modal-img-error" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:10px;font-size:12px;color:#FCA5A5">
+          ❌ Could not load image from this URL. Make sure the URL is a direct link to an image file and is publicly accessible.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-md)">
+        <label class="toggle">
+          <input type="checkbox" id="item-modal-instock" checked>
+          <div class="toggle-track"></div>
+        </label>
+        <span style="font-size:14px;color:rgba(255,255,255,0.65)">In Stock</span>
+      </div>
+      <div style="display:flex;gap:var(--space-md);margin-top:var(--space-lg)">
+        <button type="button" class="btn btn-ghost" onclick="closeItemModal(null)" style="flex:1">Cancel</button>
+        <button type="submit" class="btn btn-gold" id="item-modal-submit" style="flex:2">
+          <span id="item-modal-submit-text">Save Item</span>
+          <span id="item-modal-submit-spinner" style="display:none"><div class="spinner" style="width:16px;height:16px;border-width:2px"></div></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- ═══ ORDER IMAGE LIGHTBOX ═══ -->
+<div class="modal-overlay" id="lightbox-overlay" onclick="closeLightbox()">
+  <div style="max-width:600px;width:100%;padding:var(--space-md)">
+    <img id="lightbox-img" src="" alt="Reference design" style="width:100%;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+    <div style="text-align:center;margin-top:14px">
+      <a id="lightbox-download" href="#" download class="btn btn-gold btn-sm">⬇️ Download</a>
+      <button class="btn btn-ghost btn-sm" onclick="closeLightbox()" style="margin-left:8px">Close</button>
+    </div>
+  </div>
+</div>
+<!-- ═══ DELETE CONFIRM MODAL ═══ -->
+<div class="modal-overlay" id="delete-modal-overlay" onclick="closeDeleteModal(event)">
+  <div class="modal admin-modal" style="max-width:380px;text-align:center">
+    <div style="font-size:3rem;margin-bottom:var(--space-md)">🗑️</div>
+    <div class="modal-title" style="margin-bottom:var(--space-sm)">Delete Item?</div>
+    <p style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:var(--space-xl)">
+      This will permanently remove <strong id="delete-item-name" style="color:#fff"></strong> and its image. This cannot be undone.
+    </p>
+    <div style="display:flex;gap:var(--space-md)">
+      <button class="btn btn-ghost" onclick="closeDeleteModal(null)" style="flex:1">Cancel</button>
+      <button class="btn" id="delete-confirm-btn" style="flex:1;background:var(--danger);color:#fff">Delete</button>
+    </div>
+  </div>
+</div>
+<div id="toast-container"></div>
+<script src="js/firebase-config.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

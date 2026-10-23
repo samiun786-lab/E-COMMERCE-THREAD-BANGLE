@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manya Bangles — Custom Thread Bangles | Design Your Own</title>
+<meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * 'self' data: blob: https://raw.githubusercontent.com;">
+  <meta name="description" content="Design your dream custom thread bangle. Choose size, pattern, and embellishments. Handcrafted with love. Order via WhatsApp.">
+  <meta property="og:title" content="Manya Bangles — Custom Thread Bangles">
+  <meta property="og:description" content="Customize your perfect thread bangle with our step-by-step designer.">
+  <meta property="og:type" content="website">
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/storefront.css">
+</head>
+<body>
+<!-- ═══════════════════════════════════════════════════════════
+     SITE HEADER
+════════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="brand">
+        <img src="assets/logo.jpg" alt="Manya Bangles logo" class="brand-logo">
+        <div>
+          <div class="brand-name" id="header-brand-name">Manya Bangles</div>
+          <div class="brand-tagline">Handcrafted with love 🌸</div>
+        </div>
+      </div>
+      <a id="header-whatsapp-btn" href="#" target="_blank" rel="noopener" class="header-contact">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Chat with Us
+      </a>
+    </div>
+  </div>
+</header>
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg">
+    <img src="assets/hero.jpg" alt="Beautiful colorful thread bangles" class="hero-bg-img">
+  </div>
+  <div class="container" style="position:relative;z-index:2;width:100%;">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        ✨ Handcrafted in India &nbsp;·&nbsp; Made to Order
+      </div>
+      <h1 class="hero-title">
+        Design Your<br>
+        <em>Dream Bangle</em>
+      </h1>
+      <p class="hero-subtitle">
+        Choose your size, pick a pattern, add sparkling embellishments —
+        and receive a handcrafted bangle made just for you.
+      </p>
+      <div class="hero-cta-row">
+        <button id="hero-cta-btn" class="btn btn-primary btn-lg" onclick="scrollToCustomizer()">
+          🎨 Start Customizing
+        </button>
+        <div class="hero-trust">
+          <div class="hero-trust-dots">
+            <div class="hero-trust-dot" style="background:#C4526B"></div>
+            <div class="hero-trust-dot" style="background:#C9A84C"></div>
+            <div class="hero-trust-dot" style="background:#1A6B6E"></div>
+          </div>
+          Loved by 500+ customers
+        </div>
+      </div>
+    </div>
+    <!-- Floating badges -->
+    <div class="hero-badges">
+      <div class="hero-badge-card" style="animation-delay:0s">
+        <div class="hero-badge-num">500+</div>
+        <div class="hero-badge-label">Happy Customers</div>
+      </div>
+      <div class="hero-badge-card" style="animation-delay:0.15s">
+        <div class="hero-badge-num">25+</div>
+        <div class="hero-badge-label">Design Styles</div>
+      </div>
+      <div class="hero-badge-card" style="animation-delay:0.3s">
+        <div class="hero-badge-num">3–5</div>
+        <div class="hero-badge-label">Days Delivery</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ═══════════════════════════════════════════════════════════
+     CUSTOMIZER WIZARD
+════════════════════════════════════════════════════════════ -->
+<section id="customizer">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Step-by-Step Customizer</div>
+      <h2 class="section-title">Build Your Perfect Bangle</h2>
+      <p class="section-subtitle">Select each option below and see your price update live.</p>
+    </div>
+    <!-- Progress Bar -->
+    <div class="wizard-progress" id="wizard-progress">
+      <div class="progress-step active" data-step="0" onclick="goToStep(0)">
+        <div class="progress-step-bubble">1</div>
+        <div class="progress-step-label">Size</div>
+      </div>
+      <div class="progress-connector" id="conn-0"></div>
+      <div class="progress-step disabled" data-step="1" onclick="goToStep(1)">
+        <div class="progress-step-bubble">2</div>
+        <div class="progress-step-label">Design</div>
+      </div>
+      <div class="progress-connector" id="conn-1"></div>
+      <div class="progress-step disabled" data-step="2" onclick="goToStep(2)">
+        <div class="progress-step-bubble">3</div>
+        <div class="progress-step-label">Beads</div>
+      </div>
+      <div class="progress-connector" id="conn-2"></div>
+      <div class="progress-step disabled" data-step="3" onclick="goToStep(3)">
+        <div class="progress-step-bubble">4</div>
+        <div class="progress-step-label">Upload</div>
+      </div>
+      <div class="progress-connector" id="conn-3"></div>
+      <div class="progress-step disabled" data-step="4" onclick="goToStep(4)">
+        <div class="progress-step-bubble">5</div>
+        <div class="progress-step-label">Summary</div>
+      </div>
+    </div>
+    <!-- Wizard Card -->
+    <div class="wizard-card">
+      <!-- ── Step 1: Size ── -->
+      <div class="wizard-step active" id="step-0">
+        <div class="wizard-step-header" style="background:linear-gradient(135deg,#C4526B,#8B3349)">
+          <div class="wizard-step-num">Step 1 of 5</div>
+          <div class="wizard-step-title">Choose Your Bangle Size 💫</div>
+          <div class="wizard-step-hint">Measure the inner diameter of your wrist. Not sure? Size 2.4 fits most.</div>
+        </div>
+        <div class="wizard-step-body">
+          <div class="item-grid" id="size-grid">
+            <div class="grid-loading">
+              <div class="spinner"></div>
+              Loading sizes…
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── Step 2: Design ── -->
+      <div class="wizard-step" id="step-1">
+        <div class="wizard-step-header" style="background:linear-gradient(135deg,#C9A84C,#8B6914)">
+          <div class="wizard-step-num">Step 2 of 5</div>
+          <div class="wizard-step-title">Choose a Design Pattern ✨</div>
+          <div class="wizard-step-hint">Pick the thread wrapping style. Price varies by pattern.</div>
+        </div>
+        <div class="wizard-step-body">
+          <div class="item-grid" id="design-grid">
+            <div class="grid-loading">
+              <div class="spinner"></div>
+              Loading designs…
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── Step 3: Beads ── -->
+      <div class="wizard-step" id="step-2">
+        <div class="wizard-step-header" style="background:linear-gradient(135deg,#1A6B6E,#0D4547)">
+          <div class="wizard-step-num">Step 3 of 5</div>
+          <div class="wizard-step-title">Add Beads & Embellishments 💎</div>
+          <div class="wizard-step-hint">Optional — select one or more. Each adds to your total price.</div>
+        </div>
+        <div class="wizard-step-body">
+          <div class="item-grid" id="bead-grid">
+            <div class="grid-loading">
+              <div class="spinner"></div>
+              Loading beads…
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ── Step 4: Upload Reference ── -->
+      <div class="wizard-step" id="step-3">
+        <div class="wizard-step-header" style="background:linear-gradient(135deg,#5B4F8A,#3A305A)">
+          <div class="wizard-step-num">Step 4 of 5</div>
+          <div class="wizard-step-title">Upload a Reference Design 📸</div>
+          <div class="wizard-step-hint">Optional — share an Instagram or Pinterest screenshot for inspiration.</div>
+        </div>
+        <div class="wizard-step-body">
+          <div class="upload-area" id="upload-area">
+            <span class="upload-icon">📷</span>
+            <div class="upload-title">Drag & drop or tap to upload</div>
+            <div class="upload-hint">JPG, PNG, WEBP up to 10MB</div>
+            <input type="file" accept="image/*" class="upload-input" id="ref-image-input">
+          </div>
+          <div class="upload-preview" id="upload-preview">
+            <img id="upload-preview-img" src="" alt="Reference design">
+            <div style="text-align:center;margin-top:10px;">
+              <button class="btn btn-ghost btn-sm" onclick="clearUpload()">🗑 Remove</button>
+            </div>
+          </div>
+          <div class="upload-progress" id="upload-progress">
+            <div class="upload-progress-bar" id="upload-progress-bar"></div>
+          </div>
+          <div class="form-group" style="margin-top:var(--space-lg)">
+            <label class="form-label" for="customer-notes">📝 Custom Notes</label>
+            <textarea
+              class="form-textarea"
+              id="customer-notes"
+              placeholder="e.g., Please make it in pink and gold. I want the kundan stones on alternating sections. Wrist is 6.5 inches..."
+              rows="4"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customer-name">👤 Your Name (for order)</label>
+            <input type="text" class="form-input" id="customer-name" placeholder="e.g., Priya Sharma">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="customer-phone">📱 Your WhatsApp Number</label>
+            <input type="tel" class="form-input" id="customer-phone" placeholder="e.g., 9876543210">
+          </div>
+        </div>
+      </div>
+      <!-- ── Step 5: Summary ── -->
+      <div class="wizard-step" id="step-4">
+        <div class="wizard-step-header" style="background:linear-gradient(135deg,#2D2019,#5C4033)">
+          <div class="wizard-step-num">Step 5 of 5</div>
+          <div class="wizard-step-title">Your Order Summary 🛍️</div>
+          <div class="wizard-step-hint">Review your custom configuration, then confirm via WhatsApp.</div>
+        </div>
+        <div class="wizard-step-body">
+          <div class="summary-section" id="order-summary">
+            <!-- Populated by JS -->
+          </div>
+          <div style="margin-bottom:var(--space-lg)">
+            <button id="whatsapp-checkout-btn" class="whatsapp-btn" onclick="confirmViaWhatsApp()">
+              <span class="wa-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              </span>
+              Confirm Order via WhatsApp
+            </button>
+          </div>
+          <p style="text-align:center;font-size:12px;color:var(--text-light);">
+            🔒 Your details are shared only with us via WhatsApp. No payment needed now.
+          </p>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <div class="wizard-nav">
+        <button class="btn btn-ghost" id="btn-prev" onclick="prevStep()" style="display:none">
+          ← Back
+        </button>
+        <span class="step-indicator" id="step-indicator">Step 1 of 5</span>
+        <button class="btn btn-primary" id="btn-next" onclick="nextStep()">
+          Continue →
+        </button>
+      </div>
+    </div>
+  </div><!-- /container -->
+</section>
+<!-- ── Live Price Bar ── -->
+<div class="price-bar" id="price-bar">
+  <div class="container">
+    <div class="price-bar-inner">
+      <div>
+        <div class="price-bar-label">Your Estimate</div>
+        <div id="price-bar-beads" style="font-size:11px;color:var(--text-light)"></div>
+      </div>
+      <div class="price-bar-amount" id="price-bar-amount">₹—</div>
+      <button class="btn btn-primary btn-sm" onclick="scrollToCustomizer()">Edit</button>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-brand" id="footer-brand">Manya Bangles</div>
+    <p>Handcrafted custom thread bangles with love 🌸</p>
+    <p class="footer-sub">© 2024 Manya Bangles · All rights reserved · Made in India 🇮🇳</p>
+  </div>
+</footer>
+<!-- Toast container -->
+<div id="toast-container"></div>
+<!-- Firebase config + app scripts -->
+<script src="js/firebase-config.js"></script>
+<script src="js/storefront.js"></script>
+</body>
+</html>
