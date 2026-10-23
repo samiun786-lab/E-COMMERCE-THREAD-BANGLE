@@ -147,5 +147,3 @@ Building practical digital solutions for real-world business problems.
 ⭐ If you find this project interesting, consider starring the repository and sharing your feedback.
 
 **Let's make online selling simpler for small businesses!** 🚀
-
-ine
